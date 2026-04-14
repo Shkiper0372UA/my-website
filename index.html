@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vary: Interactive 3D helmet showcase</title>
+  <title>Vary: Interactive 3D Roof Showcase</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
@@ -53,7 +53,8 @@
       pointer-events: none;
     }
 
-    .scroll-container section {
+    .scroll-container section,
+    .scroll-container footer {
       pointer-events: auto;
     }
 
@@ -101,8 +102,8 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.15);
-      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(8px);
       cursor: pointer;
       display: flex;
@@ -112,7 +113,7 @@
     }
 
     .mode-toggle:hover {
-      background: rgba(255,255,255,0.45);
+      background: rgba(255, 255, 255, 0.45);
     }
 
     .mode-toggle svg {
@@ -126,12 +127,12 @@
     .mode-toggle .icon-sun { display: none; }
 
     body.dark-mode .mode-toggle {
-      border-color: rgba(255,255,255,0.15);
-      background: rgba(0,0,0,0.35);
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.35);
     }
 
     body.dark-mode .mode-toggle:hover {
-      background: rgba(0,0,0,0.55);
+      background: rgba(0, 0, 0, 0.55);
     }
 
     body.dark-mode .mode-toggle .icon-moon { display: none; }
@@ -146,7 +147,7 @@
     }
 
     body.dark-mode .specs-grid {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.08);
     }
 
     body.dark-mode .spec-cell {
@@ -154,11 +155,11 @@
     }
 
     body.dark-mode .feature-list li {
-      border-bottom-color: rgba(255,255,255,0.08);
+      border-bottom-color: rgba(255, 255, 255, 0.08);
     }
 
     body.dark-mode .footer {
-      border-top-color: rgba(255,255,255,0.08);
+      border-top-color: rgba(255, 255, 255, 0.08);
     }
 
     .hero {
@@ -297,7 +298,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
-      background: rgba(0,0,0,0.08);
+      background: rgba(0, 0, 0, 0.08);
       width: 100%;
       max-width: 1000px;
     }
@@ -341,7 +342,7 @@
 
     .feature-list li {
       padding: 20px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -360,7 +361,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
-      border-top: 1px solid rgba(0,0,0,0.08);
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
       background: rgba(224, 222, 218, 0.8);
       backdrop-filter: blur(8px);
     }
@@ -428,15 +429,15 @@
 
     .cta-secondary {
       color: var(--text);
-      border: 1px solid rgba(0,0,0,0.12);
-      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: rgba(255, 255, 255, 0.35);
       backdrop-filter: blur(10px);
     }
 
     body.dark-mode .cta-secondary {
       color: var(--text);
-      border-color: rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.05);
+      border-color: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     .hero-badges {
@@ -453,14 +454,14 @@
       color: var(--text);
       padding: 10px 14px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.34);
-      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(255, 255, 255, 0.34);
+      border: 1px solid rgba(0, 0, 0, 0.08);
       backdrop-filter: blur(8px);
     }
 
     body.dark-mode .hero-badge {
-      background: rgba(255,255,255,0.06);
-      border-color: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.1);
     }
 
     .nav-cta {
@@ -472,8 +473,8 @@
       text-transform: uppercase;
       padding: 12px 18px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.24);
-      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(10px);
       transition: transform 0.25s ease, background 0.25s ease;
     }
@@ -496,15 +497,15 @@
     .final-cta-card {
       width: 100%;
       max-width: 900px;
-      border: 1px solid rgba(0,0,0,0.08);
-      background: rgba(255,255,255,0.28);
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.28);
       backdrop-filter: blur(12px);
       padding: 56px;
     }
 
     body.dark-mode .final-cta-card {
-      background: rgba(255,255,255,0.04);
-      border-color: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
     }
 
     .final-cta-card h2 {
@@ -582,7 +583,7 @@
     <div class="logo">Monarchy Roofing INC</div>
     <div class="nav-links">
       <a href="#overview">Overview</a>
-      <a href="https://armada-systems-inc.myshopify.com/" target="_blank">Browse Products</a>
+      <a href="https://armada-systems-inc.myshopify.com/" target="_blank" rel="noopener noreferrer">Browse Products</a>
       <a href="#performance">Performance</a>
       <a href="#benefits">Benefits</a>
     </div>
@@ -592,7 +593,7 @@
   <div class="scroll-container">
     <section class="hero" id="overview">
       <div class="hero-content fade-in">
-        <h1>Premium Roofing<br>Built to Sell<br>Peace of Mind</h1>
+        <h1>Premium Roofing<br />Built to Sell<br />Peace of Mind</h1>
         <p>High-performance roofing systems designed for demanding climates, cleaner curb appeal, and long-term homeowner confidence. Built to protect the property today and add value for years ahead.</p>
         <div class="hero-badges">
           <div class="hero-badge">Storm-Ready Performance</div>
@@ -868,48 +869,6 @@
     const loader = new GLTFLoader();
 
     async function loadModel() {
-  try {
-    const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js');
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
-    loader.setDRACOLoader(dracoLoader);
-
-    loader.load(
-      '/house.glb',
-      (gltf) => {
-        helmet = gltf.scene;
-
-        helmet.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = false;
-            child.receiveShadow = false;
-            if (child.material) {
-              child.material.needsUpdate = true;
-            }
-          }
-        });
-
-        fitLoadedModel();
-        scene.add(helmet);
-      },
-      undefined,
-      (error) => {
-        console.error('Failed to load model:', error);
-      }
-    );
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-loadModel();
-
-    async function loadModel() {
-      if (!modelData) {
-        console.warn('3D model not found in window.UPLOADED_3D_MODELS');
-        return;
-      }
-
       try {
         const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js');
         const dracoLoader = new DRACOLoader();
@@ -917,7 +876,7 @@ loadModel();
         loader.setDRACOLoader(dracoLoader);
 
         loader.load(
-          modelData.dataUrl,
+          '/house.glb',
           (gltf) => {
             helmet = gltf.scene;
 
@@ -936,7 +895,7 @@ loadModel();
           },
           undefined,
           (error) => {
-            console.error('Failed to load GLB model:', error);
+            console.error('Failed to load model:', error);
           }
         );
       } catch (error) {
@@ -992,6 +951,14 @@ loadModel();
     });
 
     window.addEventListener('pointerup', () => {
+      if (isDragging) {
+        isDragging = false;
+        dragStartX = 0;
+        dragStartY = 0;
+      }
+    });
+
+    window.addEventListener('pointerleave', () => {
       if (isDragging) {
         isDragging = false;
         dragStartX = 0;
