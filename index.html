@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vary: Interactive 3D helmet showcase</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vary: Interactive 3D helmet showcase</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
@@ -57,7 +57,6 @@
       pointer-events: auto;
     }
 
-    /* NAV */
     nav {
       position: fixed;
       top: 0;
@@ -94,7 +93,6 @@
       text-transform: uppercase;
     }
 
-    /* DARK MODE TOGGLE */
     .mode-toggle {
       position: fixed;
       top: 20px;
@@ -139,7 +137,6 @@
     body.dark-mode .mode-toggle .icon-moon { display: none; }
     body.dark-mode .mode-toggle .icon-sun { display: block; }
 
-    /* DARK MODE OVERRIDES */
     body.dark-mode {
       --bg: #141414;
       --text: #e8e8e8;
@@ -164,7 +161,6 @@
       border-top-color: rgba(255,255,255,0.08);
     }
 
-    /* HERO */
     .hero {
       height: 100vh;
       display: flex;
@@ -224,7 +220,6 @@
       50% { opacity: 1; transform: scaleY(1); }
     }
 
-    /* SECTIONS */
     .info-section {
       min-height: 100vh;
       display: flex;
@@ -290,7 +285,6 @@
       margin-top: 4px;
     }
 
-    /* SPECS BAR */
     .specs-strip {
       min-height: 50vh;
       display: flex;
@@ -328,7 +322,6 @@
       color: var(--text-secondary);
     }
 
-    /* FEATURES LIST */
     .features-section {
       min-height: 100vh;
       display: flex;
@@ -362,7 +355,6 @@
       background: var(--accent);
     }
 
-    /* FOOTER */
     .footer {
       padding: 60px 48px;
       display: flex;
@@ -531,7 +523,6 @@
       color: var(--text-secondary);
     }
 
-    /* FADE IN ANIMATIONS */
     .fade-in {
       opacity: 0;
       transform: translateY(40px);
@@ -543,7 +534,7 @@
       transform: translateY(0);
     }
 
-      @media (max-width: 768px) {
+    @media (max-width: 768px) {
       nav { padding: 16px 24px; }
       nav .nav-links { display: none; }
       .mode-toggle { right: 24px; top: 12px; }
@@ -566,12 +557,25 @@
   </style>
 </head>
 <body>
-
   <canvas id="helmetCanvas"></canvas>
 
   <button class="mode-toggle" id="modeToggle" aria-label="Toggle dark mode">
-    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
-    <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><g stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></g></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="5"/>
+      <g stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </g>
+    </svg>
   </button>
 
   <nav>
@@ -586,8 +590,6 @@
   </nav>
 
   <div class="scroll-container">
-
-    <!-- HERO -->
     <section class="hero" id="overview">
       <div class="hero-content fade-in">
         <h1>Premium Roofing<br>Built to Sell<br>Peace of Mind</h1>
@@ -608,7 +610,6 @@
       </div>
     </section>
 
-    <!-- SECTION 1 — Structure -->
     <section class="info-section left" id="performance">
       <div class="text-block fade-in">
         <div class="label">01 — System Design</div>
@@ -627,7 +628,6 @@
       </div>
     </section>
 
-    <!-- SECTION 2 — Visor -->
     <section class="info-section right">
       <div class="text-block fade-in">
         <div class="label">02 — Weather Defense</div>
@@ -646,7 +646,6 @@
       </div>
     </section>
 
-    <!-- SPECS STRIP -->
     <section class="specs-strip" id="specs">
       <div class="specs-grid fade-in">
         <div class="spec-cell">
@@ -668,7 +667,6 @@
       </div>
     </section>
 
-    <!-- SECTION 3 — Ventilation -->
     <section class="info-section left">
       <div class="text-block fade-in">
         <div class="label">03 — Efficiency</div>
@@ -677,7 +675,6 @@
       </div>
     </section>
 
-    <!-- SECTION 4 — Features -->
     <section class="features-section" id="benefits">
       <div class="text-block fade-in">
         <div class="label">04 — Homeowner Benefits</div>
@@ -706,7 +703,6 @@
       </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-logo">Monarchy Roofing Inc</div>
       <div class="footer-links">
@@ -716,11 +712,9 @@
       </div>
       <div class="footer-copy">© 2026 Aethon. Premium roofing systems built for lasting value.</div>
     </footer>
-
   </div>
 
-  <!-- THREE.JS -->
-<script type="module">
+  <script type="module">
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
@@ -738,7 +732,6 @@
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 0, 3);
 
-    // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     scene.add(ambientLight);
 
@@ -754,31 +747,42 @@
     dirLight3.position.set(0, -3, 4);
     scene.add(dirLight3);
 
-    // Environment maps
     const HDRI_LIGHT = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/citrus_orchard_road_puresky_1k.hdr';
     const HDRI_DARK = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/qwantani_dusk_2_1k.hdr';
     const hdriCache = {};
 
     function loadHDRI(url) {
-      return new Promise((resolve) => {
-        if (hdriCache[url]) { resolve(hdriCache[url]); return; }
-        new RGBELoader().load(url, (texture) => {
-          texture.mapping = THREE.EquirectangularReflectionMapping;
-          hdriCache[url] = texture;
-          resolve(texture);
-        });
+      return new Promise((resolve, reject) => {
+        if (hdriCache[url]) {
+          resolve(hdriCache[url]);
+          return;
+        }
+
+        new RGBELoader().load(
+          url,
+          (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            hdriCache[url] = texture;
+            resolve(texture);
+          },
+          undefined,
+          (error) => reject(error)
+        );
       });
     }
 
-    // Load initial light HDRI
-    loadHDRI(HDRI_LIGHT).then((texture) => {
-      scene.environment = texture;
+    loadHDRI(HDRI_LIGHT)
+      .then((texture) => {
+        scene.environment = texture;
+      })
+      .catch((error) => {
+        console.error('Failed to load light HDRI:', error);
+      });
+
+    loadHDRI(HDRI_DARK).catch((error) => {
+      console.error('Failed to preload dark HDRI:', error);
     });
 
-    // Pre-load dark HDRI in background
-    loadHDRI(HDRI_DARK);
-
-    // Dark mode toggle
     let isDark = false;
     const BG_LIGHT = 0xe0deda;
     const BG_DARK = 0x141414;
@@ -787,8 +791,13 @@
       isDark = !isDark;
       document.body.classList.toggle('dark-mode', isDark);
 
-      const hdri = await loadHDRI(isDark ? HDRI_DARK : HDRI_LIGHT);
-      scene.environment = hdri;
+      try {
+        const hdri = await loadHDRI(isDark ? HDRI_DARK : HDRI_LIGHT);
+        scene.environment = hdri;
+      } catch (error) {
+        console.error('Failed to switch HDRI:', error);
+      }
+
       renderer.setClearColor(isDark ? BG_DARK : BG_LIGHT, 1);
       renderer.toneMappingExposure = isDark ? 1.2 : 1.0;
     });
@@ -796,6 +805,7 @@
     let helmet = null;
     let baseModelScale = 1;
     let fitCameraZ = 3;
+
     const modelBounds = {
       size: new THREE.Vector3(1, 1, 1),
       center: new THREE.Vector3(),
@@ -821,7 +831,6 @@
 
       const width = modelBounds.size.x || 1;
       const height = modelBounds.size.y || 1;
-      const depth = modelBounds.size.z || 1;
 
       const targetHeroWidth = window.innerWidth < 768 ? 2.2 : 3.0;
       const targetHeroHeight = window.innerWidth < 768 ? 1.25 : 1.6;
@@ -852,48 +861,64 @@
         camera.aspect,
         window.innerWidth < 768 ? 1.3 : 1.22
       );
+
       camera.position.z = fitCameraZ;
     }
 
     const loader = new GLTFLoader();
-    // Load uploaded 3D model
-    const modelData = window.UPLOADED_3D_MODELS?.find(m => m.name === '2025_002.glb') || window.UPLOADED_3D_MODELS?.find(m => m.name === '2025_002(1).glb');
-    if (modelData) {
-      const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js');
-      const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
-      loader.setDRACOLoader(dracoLoader);
-      loader.load(modelData.dataUrl, (gltf) => {
-        helmet = gltf.scene;
 
-        helmet.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = false;
-            child.receiveShadow = false;
-            if (child.material) {
-              child.material.needsUpdate = true;
-            }
+    const modelData =
+      window.UPLOADED_3D_MODELS?.find((m) => m.name === '2025_002.glb') ||
+      window.UPLOADED_3D_MODELS?.find((m) => m.name === '2025_002(1).glb');
+
+    async function loadModel() {
+      if (!modelData) {
+        console.warn('3D model not found in window.UPLOADED_3D_MODELS');
+        return;
+      }
+
+      try {
+        const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js');
+        const dracoLoader = new DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+        loader.setDRACOLoader(dracoLoader);
+
+        loader.load(
+          modelData.dataUrl,
+          (gltf) => {
+            helmet = gltf.scene;
+
+            helmet.traverse((child) => {
+              if (child.isMesh) {
+                child.castShadow = false;
+                child.receiveShadow = false;
+                if (child.material) {
+                  child.material.needsUpdate = true;
+                }
+              }
+            });
+
+            fitLoadedModel();
+            scene.add(helmet);
+          },
+          undefined,
+          (error) => {
+            console.error('Failed to load GLB model:', error);
           }
-        });
-
-        fitLoadedModel();
-        scene.add(helmet);
-      });
+        );
+      } catch (error) {
+        console.error('Failed to initialize DRACO loader:', error);
+      }
     }
 
-    // Scroll-based camera/model positions
+    loadModel();
+
     const sections = [
-      // Hero — front-left elevated view, looking down slightly at the roof
       { scrollStart: 0, scrollEnd: 0.15, posX: 0, posY: -0.3, rotX: 0.3, rotY: 0.4, rotZ: 0, camZ: 1.5, scale: 1.0 },
-      // Section 1 — orbit right, eye-level with the roofline
       { scrollStart: 0.15, scrollEnd: 0.35, posX: 0.6, posY: 0.0, rotX: 0, rotY: 1.2, rotZ: 0, camZ: 1.1, scale: 1.0 },
-      // Section 2 — continue orbit to back-right, slight elevation
       { scrollStart: 0.35, scrollEnd: 0.55, posX: -0.5, posY: 0.05, rotX: 0.3, rotY: 2.4, rotZ: 0, camZ: 1.08, scale: 1.0 },
-      // Specs — back view, level with walls
       { scrollStart: 0.55, scrollEnd: 0.7, posX: 0.0, posY: -0.05, rotX: 0.2, rotY: 3.5, rotZ: 0, camZ: 1.12, scale: 1.0 },
-      // Features — continue orbit to back-left
       { scrollStart: 0.7, scrollEnd: 0.85, posX: 0.4, posY: 0.0, rotX: 0.28, rotY: 4.8, rotZ: 0, camZ: 1.1, scale: 1.0 },
-      // CTA — complete the orbit, nearly back to front
       { scrollStart: 0.85, scrollEnd: 1.0, posX: -0.3, posY: -0.05, rotX: 0.32, rotY: 6.0, rotZ: 0, camZ: 1.15, scale: 1.0 },
     ];
 
@@ -909,16 +934,15 @@
     let scrollProgress = 0;
     let targetScrollProgress = 0;
 
-    // Drag-to-orbit state
     let isDragging = false;
     let dragStartX = 0;
     let dragStartY = 0;
-    let orbitX = 0; // horizontal orbit offset (Y rotation)
-    let orbitY = 0; // vertical orbit offset (X rotation)
+    let orbitX = 0;
+    let orbitY = 0;
     let targetOrbitX = 0;
     let targetOrbitY = 0;
     const DRAG_SENSITIVITY = 0.0045;
-    const ORBIT_DECAY = 0.03; // how fast orbit returns to scroll-driven pose
+    const ORBIT_DECAY = 0.03;
 
     window.addEventListener('pointerdown', (e) => {
       isDragging = true;
@@ -947,18 +971,17 @@
       targetScrollProgress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
     });
 
-    // Fade-in observer
     const fadeEls = document.querySelectorAll('.fade-in');
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
         }
       });
     }, { threshold: 0.15 });
-    fadeEls.forEach(el => observer.observe(el));
 
-    // Resize
+    fadeEls.forEach((el) => observer.observe(el));
+
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -966,7 +989,6 @@
       if (helmet) fitLoadedModel();
     });
 
-    // Animate
     function animate() {
       requestAnimationFrame(animate);
 
@@ -984,6 +1006,7 @@
             localT = smoothstep(currentSection.scrollStart, currentSection.scrollEnd, scrollProgress);
             break;
           }
+
           if (i === sections.length - 1) {
             currentSection = sections[i];
             nextSection = sections[i];
@@ -999,7 +1022,6 @@
         const camZ = lerp(currentSection.camZ, nextSection.camZ, localT);
         const scale = lerp(currentSection.scale, nextSection.scale, localT);
 
-        // Smoothly blend orbit offsets
         if (isDragging) {
           orbitX += (targetOrbitX - orbitX) * 0.12;
           orbitY += (targetOrbitY - orbitY) * 0.12;
@@ -1026,11 +1048,9 @@
 
     animate();
 
-    // Trigger initial fade
     setTimeout(() => {
       document.querySelector('.hero .fade-in')?.classList.add('visible');
     }, 300);
   </script>
-
 </body>
 </html>
