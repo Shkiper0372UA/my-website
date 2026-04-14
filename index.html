@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vary: Interactive 3D helmet showcase</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #e0deda;
+      --text: #1a1a1a;
+      --text-secondary: #6b6b6b;
+      --accent: #c45d3e;
+      --light: #eae7e2;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    canvas#helmetCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: auto;
+      cursor: grab;
+    }
+
+    canvas#helmetCanvas:active {
+      cursor: grabbing;
+    }
+
+    .scroll-container {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .scroll-container section {
+      pointer-events: auto;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      mix-blend-mode: difference;
+    }
+
+    nav .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    nav .nav-links {
+      display: flex;
+      gap: 32px;
+      margin-right: 60px;
+    }
+
+    nav .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* DARK MODE TOGGLE */
+    .mode-toggle {
+      position: fixed;
+      top: 20px;
+      right: 48px;
+      z-index: 200;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    .mode-toggle:hover {
+      background: rgba(255,255,255,0.45);
+    }
+
+    .mode-toggle svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--text);
+      transition: fill 0.4s;
+    }
+
+    .mode-toggle .icon-moon { display: block; }
+    .mode-toggle .icon-sun { display: none; }
+
+    body.dark-mode .mode-toggle {
+      border-color: rgba(255,255,255,0.15);
+      background: rgba(0,0,0,0.35);
+    }
+
+    body.dark-mode .mode-toggle:hover {
+      background: rgba(0,0,0,0.55);
+    }
+
+    body.dark-mode .mode-toggle .icon-moon { display: none; }
+    body.dark-mode .mode-toggle .icon-sun { display: block; }
+
+    /* DARK MODE OVERRIDES */
+    body.dark-mode {
+      --bg: #141414;
+      --text: #e8e8e8;
+      --text-secondary: #888888;
+      --accent: #e07050;
+      --light: #1e1e1e;
+    }
+
+    body.dark-mode .specs-grid {
+      background: rgba(255,255,255,0.08);
+    }
+
+    body.dark-mode .spec-cell {
+      background: var(--bg);
+    }
+
+    body.dark-mode .feature-list li {
+      border-bottom-color: rgba(255,255,255,0.08);
+    }
+
+    body.dark-mode .footer {
+      border-top-color: rgba(255,255,255,0.08);
+    }
+
+    /* HERO */
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 48px;
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 500px;
+    }
+
+    .hero h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 380px;
+    }
+
+    .hero .scroll-hint {
+      position: absolute;
+      bottom: 48px;
+      right: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scroll-hint span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+      writing-mode: vertical-rl;
+    }
+
+    .scroll-hint .line {
+      width: 1px;
+      height: 60px;
+      background: var(--text-secondary);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* SECTIONS */
+    .info-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 48px;
+      position: relative;
+    }
+
+    .info-section .text-block {
+      max-width: 420px;
+    }
+
+    .info-section.left .text-block {
+      margin-right: auto;
+    }
+
+    .info-section.right .text-block {
+      margin-left: auto;
+    }
+
+    .info-section .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .info-section h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 42px;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .info-section p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .info-section .stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 32px;
+    }
+
+    .info-section .stat-item .number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .info-section .stat-item .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    /* SPECS BAR */
+    .specs-strip {
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 48px;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .spec-cell {
+      background: var(--bg);
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .spec-cell .spec-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .spec-cell .spec-name {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+    }
+
+    /* FEATURES LIST */
+    .features-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 80px 48px;
+    }
+
+    .features-section .text-block {
+      max-width: 420px;
+      margin-left: auto;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin-top: 32px;
+    }
+
+    .feature-list li {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+    }
+
+    .feature-list li .feat-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* FOOTER */
+    .footer {
+      padding: 60px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid rgba(0,0,0,0.08);
+      background: rgba(224, 222, 218, 0.8);
+      backdrop-filter: blur(8px);
+    }
+
+    body.dark-mode .footer {
+      background: rgba(20, 20, 20, 0.8);
+    }
+
+    .footer .footer-logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 24px;
+      letter-spacing: -1px;
+    }
+
+    .footer .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer .footer-links a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .footer .footer-copy {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 14px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+      pointer-events: auto;
+    }
+
+    .cta-button, .cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 22px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+
+    .cta-button {
+      background: var(--accent);
+      color: #fff;
+      border: 1px solid transparent;
+      box-shadow: 0 10px 30px rgba(196, 93, 62, 0.22);
+    }
+
+    .cta-button:hover, .cta-secondary:hover, .nav-cta:hover {
+      transform: translateY(-1px);
+    }
+
+    .cta-secondary {
+      color: var(--text);
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.35);
+      backdrop-filter: blur(10px);
+    }
+
+    body.dark-mode .cta-secondary {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .hero-badge {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.34);
+      border: 1px solid rgba(0,0,0,0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    body.dark-mode .hero-badge {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .nav-cta {
+      color: #fff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.24);
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .section-note {
+      margin-top: 22px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .final-cta {
+      min-height: 72vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 48px;
+    }
+
+    .final-cta-card {
+      width: 100%;
+      max-width: 900px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.28);
+      backdrop-filter: blur(12px);
+      padding: 56px;
+    }
+
+    body.dark-mode .final-cta-card {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .final-cta-card h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 18px;
+      max-width: 680px;
+    }
+
+    .final-cta-card p {
+      max-width: 560px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    /* FADE IN ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+      @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      nav .nav-links { display: none; }
+      .mode-toggle { right: 24px; top: 12px; }
+      .hero { padding: 24px; }
+      .hero h1 { font-size: 48px; }
+      .cta-group { flex-direction: column; align-items: stretch; }
+      .cta-button, .cta-secondary { width: 100%; }
+      .hero-badges { gap: 10px; }
+      .hero-badge { width: 100%; text-align: center; }
+      .final-cta { padding: 60px 24px; }
+      .final-cta-card { padding: 32px 24px; }
+      .final-cta-card h2 { font-size: 34px; }
+      .info-section { padding: 60px 24px; }
+      .info-section h2 { font-size: 32px; }
+      .specs-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-section { padding: 60px 24px; }
+      .footer { padding: 40px 24px; flex-direction: column; gap: 24px; align-items: flex-start; }
+      .hero .scroll-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="helmetCanvas"></canvas>
+
+  <button class="mode-toggle" id="modeToggle" aria-label="Toggle dark mode">
+    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><g stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></g></svg>
+  </button>
+
+  <nav>
+    <div class="logo">Monarchy Roofing INC</div>
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="https://armada-systems-inc.myshopify.com/" target="_blank">Browse Products</a>
+      <a href="#performance">Performance</a>
+      <a href="#benefits">Benefits</a>
+    </div>
+    <a class="nav-cta" href="#quote">Request a Quote</a>
+  </nav>
+
+  <div class="scroll-container">
+
+    <!-- HERO -->
+    <section class="hero" id="overview">
+      <div class="hero-content fade-in">
+        <h1>Premium Roofing<br>Built to Sell<br>Peace of Mind</h1>
+        <p>High-performance roofing systems designed for demanding climates, cleaner curb appeal, and long-term homeowner confidence. Built to protect the property today and add value for years ahead.</p>
+        <div class="hero-badges">
+          <div class="hero-badge">Storm-Ready Performance</div>
+          <div class="hero-badge">Premium Curb Appeal</div>
+          <div class="hero-badge">Long-Term Protection</div>
+        </div>
+        <div class="cta-group">
+          <a class="cta-button" href="#quote">Get a Free Quote</a>
+          <a class="cta-secondary" href="#benefits">See Why Homeowners Upgrade</a>
+        </div>
+      </div>
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="line"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 1 — Structure -->
+    <section class="info-section left" id="performance">
+      <div class="text-block fade-in">
+        <div class="label">01 — System Design</div>
+        <h2>A Roofing System Designed to Outperform the Standard</h2>
+        <p>Every layer serves a clear purpose: defend against water intrusion, reduce weather wear, support insulation performance, and extend the lifespan of the roof as a whole. This is not a cosmetic upgrade. It is a system built to lower risk and raise confidence.</p>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="number">6</div>
+            <div class="stat-label">Protection Layers</div>
+          </div>
+          <div class="stat-item">
+            <div class="number">50+</div>
+            <div class="stat-label">Years of Designed Performance</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 — Visor -->
+    <section class="info-section right">
+      <div class="text-block fade-in">
+        <div class="label">02 — Weather Defense</div>
+        <h2>Protection That Keeps Its Look Through Heat, Wind, and Weather</h2>
+        <p>From harsh sun to driving rain and seasonal freeze-thaw cycles, the outer system is engineered to protect the home without sacrificing appearance. Homeowners get a roof that performs under pressure and still looks premium from the street.</p>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="number">360°</div>
+            <div class="stat-label">Envelope Protection</div>
+          </div>
+          <div class="stat-item">
+            <div class="number">4-Season</div>
+            <div class="stat-label">Climate Readiness</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPECS STRIP -->
+    <section class="specs-strip" id="specs">
+      <div class="specs-grid fade-in">
+        <div class="spec-cell">
+          <div class="spec-value">Class A</div>
+          <div class="spec-name">Fire Rating</div>
+        </div>
+        <div class="spec-cell">
+          <div class="spec-value">50+ yr</div>
+          <div class="spec-name">Lifespan</div>
+        </div>
+        <div class="spec-cell">
+          <div class="spec-value">R-38</div>
+          <div class="spec-name">Insulation</div>
+        </div>
+        <div class="spec-cell">
+          <div class="spec-value">160 mph</div>
+          <div class="spec-name">Wind Rating</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3 — Ventilation -->
+    <section class="info-section left">
+      <div class="text-block fade-in">
+        <div class="label">03 — Efficiency</div>
+        <h2>Ventilation That Helps the Entire Roof Last Longer</h2>
+        <p>Balanced airflow helps manage heat and moisture before they become expensive problems. Better ventilation supports attic health, improves year-round comfort, and helps the whole roofing assembly age more gracefully.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 4 — Features -->
+    <section class="features-section" id="benefits">
+      <div class="text-block fade-in">
+        <div class="label">04 — Homeowner Benefits</div>
+        <h2>Why This Upgrade Wins on Both Performance and Perception</h2>
+        <ul class="feature-list">
+          <li><span>Cleaner finish lines that elevate curb appeal</span><span class="feat-icon"></span></li>
+          <li><span>Stronger resistance to wind, water, and seasonal wear</span><span class="feat-icon"></span></li>
+          <li><span>Reduced maintenance concerns over time</span><span class="feat-icon"></span></li>
+          <li><span>More confidence when buying, selling, or refinancing</span><span class="feat-icon"></span></li>
+          <li><span>Designed to support premium positioning in the market</span><span class="feat-icon"></span></li>
+          <li><span>Built for homeowners who want fewer compromises</span><span class="feat-icon"></span></li>
+        </ul>
+        <p class="section-note">A premium roof should do more than cover the structure. It should strengthen the value of the home, reduce future headaches, and make the buying decision feel obvious.</p>
+      </div>
+    </section>
+
+    <section class="final-cta" id="quote">
+      <div class="final-cta-card fade-in">
+        <div class="label">05 — Request a Quote</div>
+        <h2>Let’s Turn This Roof Into a Selling Point for the Entire Property</h2>
+        <p>Book a consultation, request pricing, or start with a project review. We will help you choose the right system for the home, the climate, and the long-term value you want to protect.</p>
+        <div class="cta-group">
+          <a class="cta-button" href="mailto:hello@aethon.com?subject=Request%20a%20Quote">Request a Quote</a>
+          <a class="cta-secondary" href="tel:+10000000000">Call Now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-logo">Monarchy Roofing Inc</div>
+      <div class="footer-links">
+        <a href="#overview">Overview</a>
+        <a href="#benefits">Benefits</a>
+        <a href="#quote">Get Quote</a>
+      </div>
+      <div class="footer-copy">© 2026 Aethon. Premium roofing systems built for lasting value.</div>
+    </footer>
+
+  </div>
+
+  <!-- THREE.JS -->
+<script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+
+    const canvas = document.getElementById('helmetCanvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+    renderer.setClearColor(0xe0deda, 1);
+
+    const scene = new THREE.Scene();
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 3);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(ambientLight);
+
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 2.5);
+    dirLight1.position.set(5, 5, 5);
+    scene.add(dirLight1);
+
+    const dirLight2 = new THREE.DirectionalLight(0xc4a882, 1.2);
+    dirLight2.position.set(-3, 2, -2);
+    scene.add(dirLight2);
+
+    const dirLight3 = new THREE.DirectionalLight(0x8899bb, 0.8);
+    dirLight3.position.set(0, -3, 4);
+    scene.add(dirLight3);
+
+    // Environment maps
+    const HDRI_LIGHT = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/citrus_orchard_road_puresky_1k.hdr';
+    const HDRI_DARK = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/qwantani_dusk_2_1k.hdr';
+    const hdriCache = {};
+
+    function loadHDRI(url) {
+      return new Promise((resolve) => {
+        if (hdriCache[url]) { resolve(hdriCache[url]); return; }
+        new RGBELoader().load(url, (texture) => {
+          texture.mapping = THREE.EquirectangularReflectionMapping;
+          hdriCache[url] = texture;
+          resolve(texture);
+        });
+      });
+    }
+
+    // Load initial light HDRI
+    loadHDRI(HDRI_LIGHT).then((texture) => {
+      scene.environment = texture;
+    });
+
+    // Pre-load dark HDRI in background
+    loadHDRI(HDRI_DARK);
+
+    // Dark mode toggle
+    let isDark = false;
+    const BG_LIGHT = 0xe0deda;
+    const BG_DARK = 0x141414;
+
+    document.getElementById('modeToggle').addEventListener('click', async () => {
+      isDark = !isDark;
+      document.body.classList.toggle('dark-mode', isDark);
+
+      const hdri = await loadHDRI(isDark ? HDRI_DARK : HDRI_LIGHT);
+      scene.environment = hdri;
+      renderer.setClearColor(isDark ? BG_DARK : BG_LIGHT, 1);
+      renderer.toneMappingExposure = isDark ? 1.2 : 1.0;
+    });
+
+    let helmet = null;
+    let baseModelScale = 1;
+    let fitCameraZ = 3;
+    const modelBounds = {
+      size: new THREE.Vector3(1, 1, 1),
+      center: new THREE.Vector3(),
+      bottomOffset: 0,
+    };
+
+    function computeFitDistance(size, fovDeg, aspect, fitOffset = 1.18) {
+      const halfFovY = THREE.MathUtils.degToRad(fovDeg * 0.5);
+      const halfFovX = Math.atan(Math.tan(halfFovY) * aspect);
+      const distForHeight = (size.y * 0.5) / Math.tan(halfFovY);
+      const distForWidth = (size.x * 0.5) / Math.tan(halfFovX);
+      return Math.max(distForHeight, distForWidth) * fitOffset;
+    }
+
+    function fitLoadedModel() {
+      if (!helmet) return;
+
+      helmet.updateMatrixWorld(true);
+
+      const box = new THREE.Box3().setFromObject(helmet);
+      box.getSize(modelBounds.size);
+      box.getCenter(modelBounds.center);
+
+      const width = modelBounds.size.x || 1;
+      const height = modelBounds.size.y || 1;
+      const depth = modelBounds.size.z || 1;
+
+      const targetHeroWidth = window.innerWidth < 768 ? 2.2 : 3.0;
+      const targetHeroHeight = window.innerWidth < 768 ? 1.25 : 1.6;
+      const widthScale = targetHeroWidth / width;
+      const heightScale = targetHeroHeight / height;
+
+      baseModelScale = Math.min(widthScale, heightScale);
+      helmet.scale.setScalar(baseModelScale);
+
+      helmet.updateMatrixWorld(true);
+      const scaledBox = new THREE.Box3().setFromObject(helmet);
+      const scaledSize = scaledBox.getSize(new THREE.Vector3());
+      const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+
+      modelBounds.size.copy(scaledSize);
+      modelBounds.center.copy(scaledCenter);
+      modelBounds.bottomOffset = -scaledBox.min.y;
+
+      helmet.position.set(
+        -scaledCenter.x,
+        modelBounds.bottomOffset - scaledSize.y * 0.32,
+        -scaledCenter.z
+      );
+
+      fitCameraZ = computeFitDistance(
+        new THREE.Vector3(scaledSize.x * 1.02, scaledSize.y * 0.82, scaledSize.z),
+        camera.fov,
+        camera.aspect,
+        window.innerWidth < 768 ? 1.3 : 1.22
+      );
+      camera.position.z = fitCameraZ;
+    }
+
+    const loader = new GLTFLoader();
+    // Load uploaded 3D model
+    const modelData = window.UPLOADED_3D_MODELS?.find(m => m.name === '2025_002.glb') || window.UPLOADED_3D_MODELS?.find(m => m.name === '2025_002(1).glb');
+    if (modelData) {
+      const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js');
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+      loader.setDRACOLoader(dracoLoader);
+      loader.load(modelData.dataUrl, (gltf) => {
+        helmet = gltf.scene;
+
+        helmet.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = false;
+            child.receiveShadow = false;
+            if (child.material) {
+              child.material.needsUpdate = true;
+            }
+          }
+        });
+
+        fitLoadedModel();
+        scene.add(helmet);
+      });
+    }
+
+    // Scroll-based camera/model positions
+    const sections = [
+      // Hero — front-left elevated view, looking down slightly at the roof
+      { scrollStart: 0, scrollEnd: 0.15, posX: 0, posY: -0.3, rotX: 0.3, rotY: 0.4, rotZ: 0, camZ: 1.5, scale: 1.0 },
+      // Section 1 — orbit right, eye-level with the roofline
+      { scrollStart: 0.15, scrollEnd: 0.35, posX: 0.6, posY: 0.0, rotX: 0, rotY: 1.2, rotZ: 0, camZ: 1.1, scale: 1.0 },
+      // Section 2 — continue orbit to back-right, slight elevation
+      { scrollStart: 0.35, scrollEnd: 0.55, posX: -0.5, posY: 0.05, rotX: 0.3, rotY: 2.4, rotZ: 0, camZ: 1.08, scale: 1.0 },
+      // Specs — back view, level with walls
+      { scrollStart: 0.55, scrollEnd: 0.7, posX: 0.0, posY: -0.05, rotX: 0.2, rotY: 3.5, rotZ: 0, camZ: 1.12, scale: 1.0 },
+      // Features — continue orbit to back-left
+      { scrollStart: 0.7, scrollEnd: 0.85, posX: 0.4, posY: 0.0, rotX: 0.28, rotY: 4.8, rotZ: 0, camZ: 1.1, scale: 1.0 },
+      // CTA — complete the orbit, nearly back to front
+      { scrollStart: 0.85, scrollEnd: 1.0, posX: -0.3, posY: -0.05, rotX: 0.32, rotY: 6.0, rotZ: 0, camZ: 1.15, scale: 1.0 },
+    ];
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function smoothstep(a, b, t) {
+      const x = Math.max(0, Math.min(1, (t - a) / (b - a)));
+      return x * x * (3 - 2 * x);
+    }
+
+    let scrollProgress = 0;
+    let targetScrollProgress = 0;
+
+    // Drag-to-orbit state
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let orbitX = 0; // horizontal orbit offset (Y rotation)
+    let orbitY = 0; // vertical orbit offset (X rotation)
+    let targetOrbitX = 0;
+    let targetOrbitY = 0;
+    const DRAG_SENSITIVITY = 0.0045;
+    const ORBIT_DECAY = 0.03; // how fast orbit returns to scroll-driven pose
+
+    window.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      targetOrbitX = dx * DRAG_SENSITIVITY;
+      targetOrbitY = dy * DRAG_SENSITIVITY;
+    });
+
+    window.addEventListener('pointerup', () => {
+      if (isDragging) {
+        isDragging = false;
+        dragStartX = 0;
+        dragStartY = 0;
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      targetScrollProgress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
+    });
+
+    // Fade-in observer
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.15 });
+    fadeEls.forEach(el => observer.observe(el));
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      if (helmet) fitLoadedModel();
+    });
+
+    // Animate
+    function animate() {
+      requestAnimationFrame(animate);
+
+      scrollProgress += (targetScrollProgress - scrollProgress) * 0.06;
+
+      if (helmet) {
+        let currentSection = sections[0];
+        let nextSection = sections[1] || sections[0];
+        let localT = 0;
+
+        for (let i = 0; i < sections.length; i++) {
+          if (scrollProgress >= sections[i].scrollStart && scrollProgress <= sections[i].scrollEnd) {
+            currentSection = sections[i];
+            nextSection = sections[Math.min(i + 1, sections.length - 1)];
+            localT = smoothstep(currentSection.scrollStart, currentSection.scrollEnd, scrollProgress);
+            break;
+          }
+          if (i === sections.length - 1) {
+            currentSection = sections[i];
+            nextSection = sections[i];
+            localT = 1;
+          }
+        }
+
+        const posX = lerp(currentSection.posX, nextSection.posX, localT);
+        const posY = lerp(currentSection.posY, nextSection.posY, localT);
+        const rotX = lerp(currentSection.rotX, nextSection.rotX, localT);
+        const rotY = lerp(currentSection.rotY, nextSection.rotY, localT);
+        const rotZ = lerp(currentSection.rotZ, nextSection.rotZ, localT);
+        const camZ = lerp(currentSection.camZ, nextSection.camZ, localT);
+        const scale = lerp(currentSection.scale, nextSection.scale, localT);
+
+        // Smoothly blend orbit offsets
+        if (isDragging) {
+          orbitX += (targetOrbitX - orbitX) * 0.12;
+          orbitY += (targetOrbitY - orbitY) * 0.12;
+        } else {
+          orbitX += (0 - orbitX) * ORBIT_DECAY;
+          orbitY += (0 - orbitY) * ORBIT_DECAY;
+          targetOrbitX += (0 - targetOrbitX) * ORBIT_DECAY;
+          targetOrbitY += (0 - targetOrbitY) * ORBIT_DECAY;
+        }
+
+        helmet.position.x = -modelBounds.center.x + posX;
+        helmet.position.y = modelBounds.bottomOffset - modelBounds.size.y * 0.14 + posY;
+        helmet.position.z = -modelBounds.center.z;
+        helmet.rotation.x = rotX + orbitY;
+        helmet.rotation.y = rotY + Math.sin(Date.now() * 0.00025) * 0.035 + orbitX;
+        helmet.rotation.z = rotZ;
+        helmet.scale.setScalar(baseModelScale * scale);
+
+        camera.position.z = fitCameraZ * camZ;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Trigger initial fade
+    setTimeout(() => {
+      document.querySelector('.hero .fade-in')?.classList.add('visible');
+    }, 300);
+  </script>
+
+</body>
+</html>
