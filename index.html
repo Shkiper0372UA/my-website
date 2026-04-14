@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Vary: Interactive 3D Roof Showcase</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
@@ -19,28 +19,33 @@
       --text-secondary: #6b6b6b;
       --accent: #c45d3e;
       --light: #eae7e2;
+      --vh: 1vh;
     }
 
     html {
       scroll-behavior: smooth;
+      min-height: 100%;
     }
 
     body {
+      min-height: 100%;
       font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     canvas#helmetCanvas {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
-      height: 100vh;
+      height: calc(var(--vh, 1vh) * 100);
       z-index: 1;
       pointer-events: auto;
       cursor: grab;
+      touch-action: pan-y;
     }
 
     canvas#helmetCanvas:active {
@@ -68,6 +73,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 20px;
       mix-blend-mode: difference;
     }
 
@@ -123,8 +129,13 @@
       transition: fill 0.4s;
     }
 
-    .mode-toggle .icon-moon { display: block; }
-    .mode-toggle .icon-sun { display: none; }
+    .mode-toggle .icon-moon {
+      display: block;
+    }
+
+    .mode-toggle .icon-sun {
+      display: none;
+    }
 
     body.dark-mode .mode-toggle {
       border-color: rgba(255, 255, 255, 0.15);
@@ -135,8 +146,13 @@
       background: rgba(0, 0, 0, 0.55);
     }
 
-    body.dark-mode .mode-toggle .icon-moon { display: none; }
-    body.dark-mode .mode-toggle .icon-sun { display: block; }
+    body.dark-mode .mode-toggle .icon-moon {
+      display: none;
+    }
+
+    body.dark-mode .mode-toggle .icon-sun {
+      display: block;
+    }
 
     body.dark-mode {
       --bg: #141414;
@@ -163,7 +179,8 @@
     }
 
     .hero {
-      height: 100vh;
+      min-height: 100svh;
+      min-height: calc(var(--vh, 1vh) * 100);
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -217,8 +234,15 @@
     }
 
     @keyframes scrollPulse {
-      0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
-      50% { opacity: 1; transform: scaleY(1); }
+      0%, 100% {
+        opacity: 0.3;
+        transform: scaleY(0.5);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scaleY(1);
+      }
     }
 
     .info-section {
@@ -269,6 +293,7 @@
       display: flex;
       gap: 40px;
       margin-top: 32px;
+      flex-wrap: wrap;
     }
 
     .info-section .stat-item .number {
@@ -346,6 +371,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 16px;
       font-size: 15px;
     }
 
@@ -354,6 +380,7 @@
       height: 8px;
       border-radius: 50%;
       background: var(--accent);
+      flex-shrink: 0;
     }
 
     .footer {
@@ -361,6 +388,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      gap: 24px;
       border-top: 1px solid rgba(0, 0, 0, 0.08);
       background: rgba(224, 222, 218, 0.8);
       backdrop-filter: blur(8px);
@@ -380,6 +408,7 @@
     .footer .footer-links {
       display: flex;
       gap: 24px;
+      flex-wrap: wrap;
     }
 
     .footer .footer-links a {
@@ -401,7 +430,8 @@
       pointer-events: auto;
     }
 
-    .cta-button, .cta-secondary {
+    .cta-button,
+    .cta-secondary {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -423,7 +453,9 @@
       box-shadow: 0 10px 30px rgba(196, 93, 62, 0.22);
     }
 
-    .cta-button:hover, .cta-secondary:hover, .nav-cta:hover {
+    .cta-button:hover,
+    .cta-secondary:hover,
+    .nav-cta:hover {
       transform: translateY(-1px);
     }
 
@@ -477,6 +509,7 @@
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(10px);
       transition: transform 0.25s ease, background 0.25s ease;
+      white-space: nowrap;
     }
 
     .section-note {
@@ -536,24 +569,110 @@
     }
 
     @media (max-width: 768px) {
-      nav { padding: 16px 24px; }
-      nav .nav-links { display: none; }
-      .mode-toggle { right: 24px; top: 12px; }
-      .hero { padding: 24px; }
-      .hero h1 { font-size: 48px; }
-      .cta-group { flex-direction: column; align-items: stretch; }
-      .cta-button, .cta-secondary { width: 100%; }
-      .hero-badges { gap: 10px; }
-      .hero-badge { width: 100%; text-align: center; }
-      .final-cta { padding: 60px 24px; }
-      .final-cta-card { padding: 32px 24px; }
-      .final-cta-card h2 { font-size: 34px; }
-      .info-section { padding: 60px 24px; }
-      .info-section h2 { font-size: 32px; }
-      .specs-grid { grid-template-columns: repeat(2, 1fr); }
-      .features-section { padding: 60px 24px; }
-      .footer { padding: 40px 24px; flex-direction: column; gap: 24px; align-items: flex-start; }
-      .hero .scroll-hint { display: none; }
+      canvas#helmetCanvas {
+        pointer-events: none;
+      }
+
+      nav {
+        padding: 16px 24px;
+      }
+
+      nav .nav-links {
+        display: none;
+      }
+
+      .mode-toggle {
+        right: 24px;
+        top: 12px;
+      }
+
+      .hero {
+        padding: 24px;
+        justify-content: flex-end;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      .cta-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .cta-button,
+      .cta-secondary {
+        width: 100%;
+        min-height: 52px;
+        font-size: 14px;
+      }
+
+      .hero-badges {
+        gap: 10px;
+      }
+
+      .hero-badge {
+        width: 100%;
+        text-align: center;
+      }
+
+      .final-cta {
+        padding: 60px 24px;
+      }
+
+      .final-cta-card {
+        padding: 32px 24px;
+      }
+
+      .final-cta-card h2 {
+        font-size: 34px;
+      }
+
+      .info-section {
+        padding: 60px 24px;
+      }
+
+      .info-section h2 {
+        font-size: 32px;
+      }
+
+      .specs-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .spec-cell {
+        padding: 28px 20px;
+      }
+
+      .features-section {
+        padding: 60px 24px;
+      }
+
+      .footer {
+        padding: 40px 24px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero .scroll-hint {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .fade-in,
+      .scroll-hint .line,
+      .cta-button,
+      .cta-secondary,
+      .nav-cta,
+      .mode-toggle {
+        transition: none;
+        animation: none;
+      }
     }
   </style>
 </head>
@@ -562,19 +681,19 @@
 
   <button class="mode-toggle" id="modeToggle" aria-label="Toggle dark mode">
     <svg class="icon-moon" viewBox="0 0 24 24">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+      <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path>
     </svg>
     <svg class="icon-sun" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="5"/>
+      <circle cx="12" cy="12" r="5"></circle>
       <g stroke="currentColor" stroke-width="2">
-        <line x1="12" y1="1" x2="12" y2="3"/>
-        <line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/>
-        <line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
       </g>
     </svg>
   </button>
@@ -613,7 +732,7 @@
 
     <section class="info-section left" id="performance">
       <div class="text-block fade-in">
-        <div class="label">01 — System Design</div>
+        <div class="label">01 - System Design</div>
         <h2>A Roofing System Designed to Outperform the Standard</h2>
         <p>Every layer serves a clear purpose: defend against water intrusion, reduce weather wear, support insulation performance, and extend the lifespan of the roof as a whole. This is not a cosmetic upgrade. It is a system built to lower risk and raise confidence.</p>
         <div class="stats">
@@ -631,12 +750,12 @@
 
     <section class="info-section right">
       <div class="text-block fade-in">
-        <div class="label">02 — Weather Defense</div>
+        <div class="label">02 - Weather Defense</div>
         <h2>Protection That Keeps Its Look Through Heat, Wind, and Weather</h2>
         <p>From harsh sun to driving rain and seasonal freeze-thaw cycles, the outer system is engineered to protect the home without sacrificing appearance. Homeowners get a roof that performs under pressure and still looks premium from the street.</p>
         <div class="stats">
           <div class="stat-item">
-            <div class="number">360°</div>
+            <div class="number">360&deg;</div>
             <div class="stat-label">Envelope Protection</div>
           </div>
           <div class="stat-item">
@@ -670,7 +789,7 @@
 
     <section class="info-section left">
       <div class="text-block fade-in">
-        <div class="label">03 — Efficiency</div>
+        <div class="label">03 - Efficiency</div>
         <h2>Ventilation That Helps the Entire Roof Last Longer</h2>
         <p>Balanced airflow helps manage heat and moisture before they become expensive problems. Better ventilation supports attic health, improves year-round comfort, and helps the whole roofing assembly age more gracefully.</p>
       </div>
@@ -678,7 +797,7 @@
 
     <section class="features-section" id="benefits">
       <div class="text-block fade-in">
-        <div class="label">04 — Homeowner Benefits</div>
+        <div class="label">04 - Homeowner Benefits</div>
         <h2>Why This Upgrade Wins on Both Performance and Perception</h2>
         <ul class="feature-list">
           <li><span>Cleaner finish lines that elevate curb appeal</span><span class="feat-icon"></span></li>
@@ -694,8 +813,8 @@
 
     <section class="final-cta" id="quote">
       <div class="final-cta-card fade-in">
-        <div class="label">05 — Request a Quote</div>
-        <h2>Let’s Turn This Roof Into a Selling Point for the Entire Property</h2>
+        <div class="label">05 - Request a Quote</div>
+        <h2>Let's Turn This Roof Into a Selling Point for the Entire Property</h2>
         <p>Book a consultation, request pricing, or start with a project review. We will help you choose the right system for the home, the climate, and the long-term value you want to protect.</p>
         <div class="cta-group">
           <a class="cta-button" href="mailto:hello@aethon.com?subject=Request%20a%20Quote">Request a Quote</a>
@@ -711,7 +830,7 @@
         <a href="#benefits">Benefits</a>
         <a href="#quote">Get Quote</a>
       </div>
-      <div class="footer-copy">© 2026 Aethon. Premium roofing systems built for lasting value.</div>
+      <div class="footer-copy">&copy; 2026 Aethon. Premium roofing systems built for lasting value.</div>
     </footer>
   </div>
 
@@ -720,12 +839,26 @@
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
+    const isMobile = window.innerWidth < 768;
+    let mobileView = isMobile;
+
     const canvas = document.getElementById('helmetCanvas');
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const modeToggle = document.getElementById('modeToggle');
+    const fadeEls = document.querySelectorAll('.fade-in');
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: !isMobile,
+      alpha: true,
+      powerPreference: 'high-performance',
+    });
+
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
+    renderer.shadowMap.enabled = false;
     renderer.setClearColor(0xe0deda, 1);
 
     const scene = new THREE.Scene();
@@ -734,84 +867,161 @@
     camera.position.set(0, 0, 3);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-    scene.add(ambientLight);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    const fillLight = new THREE.DirectionalLight(0xc4a882, 1.2);
+    const rimLight = new THREE.DirectionalLight(0x8899bb, 0.8);
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 2.5);
-    dirLight1.position.set(5, 5, 5);
-    scene.add(dirLight1);
+    keyLight.position.set(5, 5, 5);
+    fillLight.position.set(-3, 2, -2);
+    rimLight.position.set(0, -3, 4);
 
-    const dirLight2 = new THREE.DirectionalLight(0xc4a882, 1.2);
-    dirLight2.position.set(-3, 2, -2);
-    scene.add(dirLight2);
-
-    const dirLight3 = new THREE.DirectionalLight(0x8899bb, 0.8);
-    dirLight3.position.set(0, -3, 4);
-    scene.add(dirLight3);
+    scene.add(ambientLight, keyLight, fillLight, rimLight);
 
     const HDRI_LIGHT = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/citrus_orchard_road_puresky_1k.hdr';
     const HDRI_DARK = 'https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/qwantani_dusk_2_1k.hdr';
-    const hdriCache = {};
-
-    function loadHDRI(url) {
-      return new Promise((resolve, reject) => {
-        if (hdriCache[url]) {
-          resolve(hdriCache[url]);
-          return;
-        }
-
-        new RGBELoader().load(
-          url,
-          (texture) => {
-            texture.mapping = THREE.EquirectangularReflectionMapping;
-            hdriCache[url] = texture;
-            resolve(texture);
-          },
-          undefined,
-          (error) => reject(error)
-        );
-      });
-    }
-
-    loadHDRI(HDRI_LIGHT)
-      .then((texture) => {
-        scene.environment = texture;
-      })
-      .catch((error) => {
-        console.error('Failed to load light HDRI:', error);
-      });
-
-    loadHDRI(HDRI_DARK).catch((error) => {
-      console.error('Failed to preload dark HDRI:', error);
-    });
-
-    let isDark = false;
     const BG_LIGHT = 0xe0deda;
     const BG_DARK = 0x141414;
+    const hdriCache = new Map();
 
-    document.getElementById('modeToggle').addEventListener('click', async () => {
-      isDark = !isDark;
-      document.body.classList.toggle('dark-mode', isDark);
+    const desktopSections = [
+      { scrollStart: 0, scrollEnd: 0.15, posX: 0, posY: -0.3, rotX: 0.3, rotY: 0.4, rotZ: 0, camZ: 1.5, scale: 1.0 },
+      { scrollStart: 0.15, scrollEnd: 0.35, posX: 0.6, posY: 0.0, rotX: 0, rotY: 1.2, rotZ: 0, camZ: 1.1, scale: 1.0 },
+      { scrollStart: 0.35, scrollEnd: 0.55, posX: -0.5, posY: 0.05, rotX: 0.3, rotY: 2.4, rotZ: 0, camZ: 1.08, scale: 1.0 },
+      { scrollStart: 0.55, scrollEnd: 0.7, posX: 0.0, posY: -0.05, rotX: 0.2, rotY: 3.5, rotZ: 0, camZ: 1.12, scale: 1.0 },
+      { scrollStart: 0.7, scrollEnd: 0.85, posX: 0.4, posY: 0.0, rotX: 0.28, rotY: 4.8, rotZ: 0, camZ: 1.1, scale: 1.0 },
+      { scrollStart: 0.85, scrollEnd: 1.0, posX: -0.3, posY: -0.05, rotX: 0.32, rotY: 6.0, rotZ: 0, camZ: 1.15, scale: 1.0 },
+    ];
 
-      try {
-        const hdri = await loadHDRI(isDark ? HDRI_DARK : HDRI_LIGHT);
-        scene.environment = hdri;
-      } catch (error) {
-        console.error('Failed to switch HDRI:', error);
-      }
-
-      renderer.setClearColor(isDark ? BG_DARK : BG_LIGHT, 1);
-      renderer.toneMappingExposure = isDark ? 1.2 : 1.0;
-    });
-
-    let helmet = null;
-    let baseModelScale = 1;
-    let fitCameraZ = 3;
+    const mobileSections = [
+      { scrollStart: 0, scrollEnd: 0.15, posX: 0, posY: -0.24, rotX: 0.24, rotY: 0.32, rotZ: 0, camZ: 1.38, scale: 1.0 },
+      { scrollStart: 0.15, scrollEnd: 0.35, posX: 0.32, posY: -0.02, rotX: 0.08, rotY: 0.95, rotZ: 0, camZ: 1.12, scale: 1.0 },
+      { scrollStart: 0.35, scrollEnd: 0.55, posX: -0.26, posY: 0.02, rotX: 0.24, rotY: 1.95, rotZ: 0, camZ: 1.08, scale: 1.0 },
+      { scrollStart: 0.55, scrollEnd: 0.7, posX: 0.0, posY: -0.03, rotX: 0.16, rotY: 2.82, rotZ: 0, camZ: 1.1, scale: 1.0 },
+      { scrollStart: 0.7, scrollEnd: 0.85, posX: 0.22, posY: 0.0, rotX: 0.22, rotY: 3.9, rotZ: 0, camZ: 1.08, scale: 1.0 },
+      { scrollStart: 0.85, scrollEnd: 1.0, posX: -0.18, posY: -0.03, rotX: 0.24, rotY: 4.8, rotZ: 0, camZ: 1.12, scale: 1.0 },
+    ];
 
     const modelBounds = {
       size: new THREE.Vector3(1, 1, 1),
       center: new THREE.Vector3(),
       bottomOffset: 0,
     };
+
+    const tempBox = new THREE.Box3();
+    const tempSize = new THREE.Vector3();
+    const tempCenter = new THREE.Vector3();
+
+    const state = {
+      isDark: false,
+      scrollProgress: 0,
+      targetScrollProgress: 0,
+      isDragging: false,
+      dragStartX: 0,
+      dragStartY: 0,
+      orbitX: 0,
+      orbitY: 0,
+      targetOrbitX: 0,
+      targetOrbitY: 0,
+    };
+
+    const DRAG_SENSITIVITY = 0.0045;
+    const ORBIT_DECAY = 0.03;
+    const ORBIT_LERP = 0.12;
+    const SCROLL_LERP = 0.06;
+
+    let modelRoot = null;
+    let baseModelScale = 1;
+    let fitCameraZ = 3;
+    let environmentRequestId = 0;
+
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function smoothstep(a, b, t) {
+      const x = Math.max(0, Math.min(1, (t - a) / (b - a || 1)));
+      return x * x * (3 - 2 * x);
+    }
+
+    function updateViewportHeight() {
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    }
+
+    function getSections() {
+      return mobileView ? mobileSections : desktopSections;
+    }
+
+    function applyLightingProfile() {
+      if (mobileView) {
+        ambientLight.intensity = state.isDark ? 0.58 : 0.72;
+        keyLight.intensity = state.isDark ? 1.9 : 2.15;
+        keyLight.color.set(state.isDark ? 0xf5efe6 : 0xffffff);
+        fillLight.visible = false;
+        rimLight.visible = false;
+      } else {
+        ambientLight.intensity = state.isDark ? 0.36 : 0.3;
+        keyLight.intensity = state.isDark ? 2.75 : 2.5;
+        keyLight.color.set(0xffffff);
+        fillLight.visible = true;
+        fillLight.intensity = state.isDark ? 1.0 : 1.2;
+        rimLight.visible = true;
+        rimLight.intensity = state.isDark ? 0.65 : 0.8;
+      }
+    }
+
+    function loadHDRI(url) {
+      if (hdriCache.has(url)) {
+        return Promise.resolve(hdriCache.get(url));
+      }
+
+      return new Promise((resolve, reject) => {
+        new RGBELoader().load(
+          url,
+          (texture) => {
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            hdriCache.set(url, texture);
+            resolve(texture);
+          },
+          undefined,
+          (error) => {
+            reject(error instanceof Error ? error : new Error('HDRI failed to load.'));
+          }
+        );
+      });
+    }
+
+    async function updateEnvironment() {
+      const requestId = ++environmentRequestId;
+
+      if (mobileView) {
+        scene.environment = null;
+        return;
+      }
+
+      const url = state.isDark ? HDRI_DARK : HDRI_LIGHT;
+
+      try {
+        const texture = await loadHDRI(url);
+        if (requestId !== environmentRequestId) {
+          return;
+        }
+        scene.environment = texture;
+      } catch (error) {
+        if (requestId !== environmentRequestId) {
+          return;
+        }
+        scene.environment = null;
+        console.error('Failed to load environment:', error);
+      }
+    }
+
+    function updateTheme() {
+      document.body.classList.toggle('dark-mode', state.isDark);
+      renderer.setClearColor(state.isDark ? BG_DARK : BG_LIGHT, 1);
+      renderer.toneMappingExposure = state.isDark ? 1.15 : 1.0;
+      applyLightingProfile();
+      updateEnvironment();
+    }
 
     function computeFitDistance(size, fovDeg, aspect, fitOffset = 1.18) {
       const halfFovY = THREE.MathUtils.degToRad(fovDeg * 0.5);
@@ -822,198 +1032,183 @@
     }
 
     function fitLoadedModel() {
-      if (!helmet) return;
+      if (!modelRoot) {
+        return;
+      }
 
-      helmet.updateMatrixWorld(true);
-
-      const box = new THREE.Box3().setFromObject(helmet);
-      box.getSize(modelBounds.size);
-      box.getCenter(modelBounds.center);
+      modelRoot.updateMatrixWorld(true);
+      tempBox.setFromObject(modelRoot);
+      tempBox.getSize(modelBounds.size);
+      tempBox.getCenter(modelBounds.center);
 
       const width = modelBounds.size.x || 1;
       const height = modelBounds.size.y || 1;
-
-      const targetHeroWidth = window.innerWidth < 768 ? 2.2 : 3.0;
-      const targetHeroHeight = window.innerWidth < 768 ? 1.25 : 1.6;
+      const targetHeroWidth = mobileView ? 2.2 : 3.0;
+      const targetHeroHeight = mobileView ? 1.25 : 1.6;
       const widthScale = targetHeroWidth / width;
       const heightScale = targetHeroHeight / height;
 
       baseModelScale = Math.min(widthScale, heightScale);
-      helmet.scale.setScalar(baseModelScale);
+      modelRoot.scale.setScalar(baseModelScale);
 
-      helmet.updateMatrixWorld(true);
-      const scaledBox = new THREE.Box3().setFromObject(helmet);
-      const scaledSize = scaledBox.getSize(new THREE.Vector3());
-      const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+      modelRoot.updateMatrixWorld(true);
+      tempBox.setFromObject(modelRoot);
+      tempBox.getSize(tempSize);
+      tempBox.getCenter(tempCenter);
 
-      modelBounds.size.copy(scaledSize);
-      modelBounds.center.copy(scaledCenter);
-      modelBounds.bottomOffset = -scaledBox.min.y;
+      modelBounds.size.copy(tempSize);
+      modelBounds.center.copy(tempCenter);
+      modelBounds.bottomOffset = -tempBox.min.y;
 
-      helmet.position.set(
-        -scaledCenter.x,
-        modelBounds.bottomOffset - scaledSize.y * 0.32,
-        -scaledCenter.z
+      modelRoot.position.set(
+        -tempCenter.x,
+        modelBounds.bottomOffset - tempSize.y * 0.32,
+        -tempCenter.z
       );
 
       fitCameraZ = computeFitDistance(
-        new THREE.Vector3(scaledSize.x * 1.02, scaledSize.y * 0.82, scaledSize.z),
+        tempSize.set(tempSize.x * 1.02, tempSize.y * 0.82, tempSize.z),
         camera.fov,
         camera.aspect,
-        window.innerWidth < 768 ? 1.3 : 1.22
+        mobileView ? 1.3 : 1.22
       );
 
       camera.position.z = fitCameraZ;
     }
 
-    const loader = new GLTFLoader();
+    function handleModelError(error) {
+      console.error('Failed to load /house.glb:', error);
+      canvas.style.pointerEvents = 'none';
+      canvas.setAttribute('aria-hidden', 'true');
+    }
 
-    async function loadModel() {
-      try {
-        const { DRACOLoader } = await import('three/addons/loaders/DRACOLoader.js');
-        const dracoLoader = new DRACOLoader();
-        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
-        loader.setDRACOLoader(dracoLoader);
+    function loadModel() {
+      const loader = new GLTFLoader();
 
+      return new Promise((resolve, reject) => {
         loader.load(
           '/house.glb',
           (gltf) => {
-            helmet = gltf.scene;
+            const loadedScene = gltf.scene || gltf.scenes?.[0];
 
-            helmet.traverse((child) => {
-              if (child.isMesh) {
-                child.castShadow = false;
-                child.receiveShadow = false;
-                if (child.material) {
-                  child.material.needsUpdate = true;
-                }
+            if (!loadedScene) {
+              reject(new Error('GLB did not contain a scene.'));
+              return;
+            }
+
+            modelRoot = loadedScene;
+
+            modelRoot.traverse((child) => {
+              if (!child.isMesh) {
+                return;
+              }
+
+              child.castShadow = false;
+              child.receiveShadow = false;
+
+              if (child.material) {
+                child.material.needsUpdate = true;
               }
             });
 
             fitLoadedModel();
-            scene.add(helmet);
+            scene.add(modelRoot);
+            resolve(modelRoot);
           },
           undefined,
           (error) => {
-            console.error('Failed to load model:', error);
+            reject(error instanceof Error ? error : new Error('GLB failed to load.'));
           }
         );
-      } catch (error) {
-        console.error('Failed to initialize DRACO loader:', error);
-      }
-    }
-
-    loadModel();
-
-    const sections = [
-      { scrollStart: 0, scrollEnd: 0.15, posX: 0, posY: -0.3, rotX: 0.3, rotY: 0.4, rotZ: 0, camZ: 1.5, scale: 1.0 },
-      { scrollStart: 0.15, scrollEnd: 0.35, posX: 0.6, posY: 0.0, rotX: 0, rotY: 1.2, rotZ: 0, camZ: 1.1, scale: 1.0 },
-      { scrollStart: 0.35, scrollEnd: 0.55, posX: -0.5, posY: 0.05, rotX: 0.3, rotY: 2.4, rotZ: 0, camZ: 1.08, scale: 1.0 },
-      { scrollStart: 0.55, scrollEnd: 0.7, posX: 0.0, posY: -0.05, rotX: 0.2, rotY: 3.5, rotZ: 0, camZ: 1.12, scale: 1.0 },
-      { scrollStart: 0.7, scrollEnd: 0.85, posX: 0.4, posY: 0.0, rotX: 0.28, rotY: 4.8, rotZ: 0, camZ: 1.1, scale: 1.0 },
-      { scrollStart: 0.85, scrollEnd: 1.0, posX: -0.3, posY: -0.05, rotX: 0.32, rotY: 6.0, rotZ: 0, camZ: 1.15, scale: 1.0 },
-    ];
-
-    function lerp(a, b, t) {
-      return a + (b - a) * t;
-    }
-
-    function smoothstep(a, b, t) {
-      const x = Math.max(0, Math.min(1, (t - a) / (b - a)));
-      return x * x * (3 - 2 * x);
-    }
-
-    let scrollProgress = 0;
-    let targetScrollProgress = 0;
-
-    let isDragging = false;
-    let dragStartX = 0;
-    let dragStartY = 0;
-    let orbitX = 0;
-    let orbitY = 0;
-    let targetOrbitX = 0;
-    let targetOrbitY = 0;
-    const DRAG_SENSITIVITY = 0.0045;
-    const ORBIT_DECAY = 0.03;
-
-    window.addEventListener('pointerdown', (e) => {
-      isDragging = true;
-      dragStartX = e.clientX;
-      dragStartY = e.clientY;
-    });
-
-    window.addEventListener('pointermove', (e) => {
-      if (!isDragging) return;
-      const dx = e.clientX - dragStartX;
-      const dy = e.clientY - dragStartY;
-      targetOrbitX = dx * DRAG_SENSITIVITY;
-      targetOrbitY = dy * DRAG_SENSITIVITY;
-    });
-
-    window.addEventListener('pointerup', () => {
-      if (isDragging) {
-        isDragging = false;
-        dragStartX = 0;
-        dragStartY = 0;
-      }
-    });
-
-    window.addEventListener('pointerleave', () => {
-      if (isDragging) {
-        isDragging = false;
-        dragStartX = 0;
-        dragStartY = 0;
-      }
-    });
-
-    window.addEventListener('scroll', () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      targetScrollProgress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
-    });
-
-    const fadeEls = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
       });
-    }, { threshold: 0.15 });
+    }
 
-    fadeEls.forEach((el) => observer.observe(el));
+    function updateScrollProgress() {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      state.targetScrollProgress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
+    }
 
-    window.addEventListener('resize', () => {
+    function stopDragging() {
+      state.isDragging = false;
+      state.dragStartX = 0;
+      state.dragStartY = 0;
+    }
+
+    function handlePointerDown(event) {
+      if (mobileView || !modelRoot) {
+        return;
+      }
+
+      state.isDragging = true;
+      state.dragStartX = event.clientX;
+      state.dragStartY = event.clientY;
+    }
+
+    function handlePointerMove(event) {
+      if (mobileView || !state.isDragging) {
+        return;
+      }
+
+      const dx = event.clientX - state.dragStartX;
+      const dy = event.clientY - state.dragStartY;
+      state.targetOrbitX = dx * DRAG_SENSITIVITY;
+      state.targetOrbitY = dy * DRAG_SENSITIVITY;
+    }
+
+    function handleResponsiveChange() {
+      mobileView = window.innerWidth < 768;
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      if (helmet) fitLoadedModel();
-    });
+      renderer.setSize(window.innerWidth, window.innerHeight, false);
+      renderer.setPixelRatio(mobileView ? 1 : Math.min(window.devicePixelRatio, 2));
+      updateViewportHeight();
 
-    function animate() {
+      if (mobileView) {
+        stopDragging();
+        state.orbitX = 0;
+        state.orbitY = 0;
+        state.targetOrbitX = 0;
+        state.targetOrbitY = 0;
+      }
+
+      applyLightingProfile();
+      updateEnvironment();
+
+      if (modelRoot) {
+        fitLoadedModel();
+      }
+
+      updateScrollProgress();
+    }
+
+    function getSectionState(progress) {
+      const sections = getSections();
+      let currentSection = sections[0];
+      let nextSection = sections[1] || sections[0];
+      let localT = 0;
+
+      for (let index = 0; index < sections.length; index += 1) {
+        const section = sections[index];
+
+        if (progress >= section.scrollStart && progress <= section.scrollEnd) {
+          currentSection = section;
+          nextSection = sections[Math.min(index + 1, sections.length - 1)];
+          localT = smoothstep(section.scrollStart, section.scrollEnd, progress);
+          return { currentSection, nextSection, localT };
+        }
+      }
+
+      currentSection = sections[sections.length - 1];
+      return { currentSection, nextSection: currentSection, localT: 1 };
+    }
+
+    function animate(time) {
       requestAnimationFrame(animate);
 
-      scrollProgress += (targetScrollProgress - scrollProgress) * 0.06;
+      state.scrollProgress += (state.targetScrollProgress - state.scrollProgress) * SCROLL_LERP;
 
-      if (helmet) {
-        let currentSection = sections[0];
-        let nextSection = sections[1] || sections[0];
-        let localT = 0;
-
-        for (let i = 0; i < sections.length; i++) {
-          if (scrollProgress >= sections[i].scrollStart && scrollProgress <= sections[i].scrollEnd) {
-            currentSection = sections[i];
-            nextSection = sections[Math.min(i + 1, sections.length - 1)];
-            localT = smoothstep(currentSection.scrollStart, currentSection.scrollEnd, scrollProgress);
-            break;
-          }
-
-          if (i === sections.length - 1) {
-            currentSection = sections[i];
-            nextSection = sections[i];
-            localT = 1;
-          }
-        }
-
+      if (modelRoot) {
+        const { currentSection, nextSection, localT } = getSectionState(state.scrollProgress);
         const posX = lerp(currentSection.posX, nextSection.posX, localT);
         const posY = lerp(currentSection.posY, nextSection.posY, localT);
         const rotX = lerp(currentSection.rotX, nextSection.rotX, localT);
@@ -1022,23 +1217,25 @@
         const camZ = lerp(currentSection.camZ, nextSection.camZ, localT);
         const scale = lerp(currentSection.scale, nextSection.scale, localT);
 
-        if (isDragging) {
-          orbitX += (targetOrbitX - orbitX) * 0.12;
-          orbitY += (targetOrbitY - orbitY) * 0.12;
-        } else {
-          orbitX += (0 - orbitX) * ORBIT_DECAY;
-          orbitY += (0 - orbitY) * ORBIT_DECAY;
-          targetOrbitX += (0 - targetOrbitX) * ORBIT_DECAY;
-          targetOrbitY += (0 - targetOrbitY) * ORBIT_DECAY;
+        if (!mobileView) {
+          if (state.isDragging) {
+            state.orbitX += (state.targetOrbitX - state.orbitX) * ORBIT_LERP;
+            state.orbitY += (state.targetOrbitY - state.orbitY) * ORBIT_LERP;
+          } else {
+            state.orbitX += (0 - state.orbitX) * ORBIT_DECAY;
+            state.orbitY += (0 - state.orbitY) * ORBIT_DECAY;
+            state.targetOrbitX += (0 - state.targetOrbitX) * ORBIT_DECAY;
+            state.targetOrbitY += (0 - state.targetOrbitY) * ORBIT_DECAY;
+          }
         }
 
-        helmet.position.x = -modelBounds.center.x + posX;
-        helmet.position.y = modelBounds.bottomOffset - modelBounds.size.y * 0.14 + posY;
-        helmet.position.z = -modelBounds.center.z;
-        helmet.rotation.x = rotX + orbitY;
-        helmet.rotation.y = rotY + Math.sin(Date.now() * 0.00025) * 0.035 + orbitX;
-        helmet.rotation.z = rotZ;
-        helmet.scale.setScalar(baseModelScale * scale);
+        modelRoot.position.x = -modelBounds.center.x + posX;
+        modelRoot.position.y = modelBounds.bottomOffset - modelBounds.size.y * 0.14 + posY;
+        modelRoot.position.z = -modelBounds.center.z;
+        modelRoot.rotation.x = rotX + (mobileView ? 0 : state.orbitY);
+        modelRoot.rotation.y = rotY + (mobileView ? 0 : Math.sin(time * 0.00025) * 0.035 + state.orbitX);
+        modelRoot.rotation.z = rotZ;
+        modelRoot.scale.setScalar(baseModelScale * scale);
 
         camera.position.z = fitCameraZ * camZ;
       }
@@ -1046,7 +1243,43 @@
       renderer.render(scene, camera);
     }
 
-    animate();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    fadeEls.forEach((element) => observer.observe(element));
+
+    let resizeFrame = 0;
+
+    modeToggle.addEventListener('click', () => {
+      state.isDark = !state.isDark;
+      updateTheme();
+    });
+
+    canvas.addEventListener('pointerdown', handlePointerDown);
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerup', stopDragging);
+    window.addEventListener('pointercancel', stopDragging);
+    window.addEventListener('pointerleave', stopDragging);
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(handleResponsiveChange);
+    });
+
+    updateViewportHeight();
+    updateScrollProgress();
+    applyLightingProfile();
+    updateEnvironment();
+    loadModel().catch(handleModelError);
+    animate(0);
 
     setTimeout(() => {
       document.querySelector('.hero .fade-in')?.classList.add('visible');
